@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback } from "react";
 import { useNavigate, useParams } from "react-router";
 
+const BASE_API = "https://solve-stock-market.vercel.app";
+
 const fmt = (n, d = 2) => (n != null ? Number(n).toFixed(d) : "–");
 const sign = (n) => (Number(n) >= 0 ? `+${fmt(n)}` : fmt(n));
 const pad = (v) => String(v).padStart(2, "0");
@@ -85,6 +87,17 @@ function StockRow({ stock, index }) {
       >
         {sign(stock.gapPercent)}%
       </td>
+      <td
+        className={`px-4 py-3 font-mono text-sm font-semibold flex flex-row  text-black gap-2`}
+      >
+        {stock?.previous_rank}
+
+        <p
+          className={`p-2 border-2 rounded-[50%] w-8 h-8  ${stock?.previous_rank > stock?.rank ? "text-green-600" : "text-red-500"}  flex flex-row justify-center items-align`}
+        >
+          {Math.abs(stock?.rank - stock?.previous_rank)}
+        </p>
+      </td>
     </tr>
   );
 }
@@ -102,9 +115,7 @@ export default function Dashboard() {
     setLoading(true);
     setError(null);
     try {
-      const res = await fetch(
-        `https://solve-stock-market.vercel.app/api/get-intraday/get/${date}`,
-      );
+      const res = await fetch(`${BASE_API}/api/get-intraday/get/${date}`);
       if (!res.ok) throw new Error(`Server returned ${res.status}`);
       const json = await res.json();
       const arr = Array.isArray(json) ? json : [json];
@@ -229,6 +240,7 @@ export default function Dashboard() {
                             "Percentage",
                             "Gap",
                             "Gap %",
+                            "Previous Intraday Rank",
                           ].map((h) => (
                             <th
                               key={h}
