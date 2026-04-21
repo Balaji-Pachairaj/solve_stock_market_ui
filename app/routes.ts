@@ -6,4 +6,8 @@ export default [
   route("/set-up-intraday", "routes/set-up-Intraday.jsx"),
   route("/dashboard/:date", "routes/get-intraday.jsx"),
   route("/dashboard/trade-one-sight/:date", "routes/trade-one-sight.jsx"),
+  route(
+    "/dashboard/trade-one-sight-chart/:date",
+    "routes/trade-one-sight-chart.jsx",
+  ),
 ] satisfies RouteConfig;
